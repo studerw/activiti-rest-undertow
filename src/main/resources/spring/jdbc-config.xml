@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+       http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd">
+
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+
+    <!--<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource"-->
+          <!--p:driverClass="${jdbc.driver}" p:url="${jdbc.url}"-->
+          <!--p:username="${jdbc.user}"-->
+          <!--p:password="${jdbc.pw}"/>-->
+
+    <!--
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${jdbc.driver}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.user}" />
+        <property name="password" value="${jdbc.pw}" />
+        <property name="defaultAutoCommit" value="false" />
+    </bean>
+    -->
+
+    <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig"
+          p:driverClassName="${jdbc.driver}"
+          p:jdbcUrl="${jdbc.url}"
+          p:password="${jdbc.pw}"
+          p:username="${jdbc.user}" />
+
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" c:configuration-ref="hikariConfig"/>
+
+    <bean id="proxiedDataSource" class="org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy" p:targetDataSource-ref="dataSource"/>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" p:dataSource-ref="dataSource"/>
+
+    <!--<jdbc:initialize-database data-source="dataSource">-->
+        <!--<jdbc:script location="${jdbc.initialize.location}"/>-->
+    <!--</jdbc:initialize-database>-->
+
+</beans>
+

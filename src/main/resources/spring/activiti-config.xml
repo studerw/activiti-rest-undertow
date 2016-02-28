@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+    <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+        <property name="databaseType" value="${jdbc.type}"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="databaseSchemaUpdate" value="true"/>
+        <property name="deploymentResources" value="classpath*:bpmn/*.bpmn20.xml"/>
+        <property name="asyncExecutorActivate" value="true"/>
+        <property name="asyncExecutorEnabled" value="true"/>
+        <property name="jobExecutorActivate" value="false"/>
+        <property name="history" value="full"/>
+        <property name="createDiagramOnDeploy" value="true"/>
+        <property name="enableSafeBpmnXml" value="true"/>
+    </bean>
+
+    <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+        <property name="processEngineConfiguration" ref="processEngineConfiguration"/>
+    </bean>
+
+    <bean id="repositoryService" class="org.activiti.engine.RepositoryService"
+          factory-bean="processEngine"
+          factory-method="getRepositoryService"/>
+    <bean id="runtimeService" class="org.activiti.engine.RuntimeService"
+          factory-bean="processEngine"
+          factory-method="getRuntimeService"/>
+    <bean id="taskService"
+          factory-bean="processEngine" class="org.activiti.engine.TaskService"
+          factory-method="getTaskService"/>
+    <bean id="historyService"
+          factory-bean="processEngine" class="org.activiti.engine.HistoryService"
+          factory-method="getHistoryService"/>
+    <bean id="managementService" class="org.activiti.engine.ManagementService"
+          factory-bean="processEngine"
+          factory-method="getManagementService"/>
+    <bean id="identityService" class="org.activiti.engine.IdentityService"
+          factory-bean="processEngine"
+          factory-method="getIdentityService"/>
+
+    <bean id="demoDataGenerator" class="com.studerw.activiti.DemoDataGenerator" init-method="init" depends-on="processEngine">
+        <property name="processEngine" ref="processEngine" />
+        <property name="createDemoUsersAndGroups" value="${activiti.demo.createUsers}" />
+    </bean>
+
+</beans>
+
