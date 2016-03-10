@@ -16,7 +16,9 @@ To run the application:
 
 `mvn exec:java`
 
-To use the rest API, use Curl:
+At this point, you will have access to the full [Activiti Rest API](http://www.activiti.org/userguide/#_rest_api):
+
+To test the rest API, use Curl or a browser with a JSON formatting plugin (e.g. Chrome JSONView):
 
 `curl http://localhost:8080/myapp/service/repository/process-definitions`
 
