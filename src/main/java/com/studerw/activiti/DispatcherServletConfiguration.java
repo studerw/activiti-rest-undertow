@@ -31,7 +31,7 @@ public class DispatcherServletConfiguration extends WebMvcConfigurationSupport {
 
   @Autowired
   private ObjectMapper objectMapper;
-  
+
   @Autowired
   private Environment environment;
 
@@ -63,7 +63,7 @@ public class DispatcherServletConfiguration extends WebMvcConfigurationSupport {
     requestMappingHandlerMapping.setInterceptors(interceptors);
     return requestMappingHandlerMapping;
   }
-  
+
   @Override
   public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
     addDefaultHttpMessageConverters(converters);
@@ -80,5 +80,5 @@ public class DispatcherServletConfiguration extends WebMvcConfigurationSupport {
   protected void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
     configurer.favorPathExtension(false);
   }
-  
+
 }

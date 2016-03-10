@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletException;
 
+import java.util.Arrays;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class App {
@@ -25,6 +27,7 @@ public class App {
     public static void main( String[] args ) {
 
         try {
+            logger.info("Staring application with args: {}", Arrays.toString(args));
             new App().initialize();
         } catch (Exception e) {
             e.printStackTrace();
@@ -32,17 +35,16 @@ public class App {
     }
 
     public void initialize() throws Exception{
-//        initActiviti();
         initUndertow();
     }
 
     private void initUndertow() throws ServletException {
-        logger.debug("Initializing Undertow...");
+        logger.info("Initializing Undertow...");
 
         DeploymentInfo servletBuilder = Servlets.deployment()
                 .setClassLoader(App.class.getClassLoader())
                 .setContextPath("/myapp")
-                .setDeploymentName("test.war")
+                .setDeploymentName("myapp.war")
                 .addListener(new ListenerInfo(WebConfigurer.class))
                 .addServlets(
                         Servlets.servlet("MyServlet", MessageServlet.class)
@@ -58,22 +60,22 @@ public class App {
                 .setHandler(path)
                 .build();
         server.start();
-        logger.debug("Undertow init complete.");
+        logger.info("Undertow init complete: Servlet Context at: http://localhost:8080/myapp");
     }
 
-    private void initActiviti(){
-        logger.debug("Initializing Activiti...");
-
-        processEngine = ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration()
-                .setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_CREATE_DROP)
-                .setJdbcUrl("jdbc:h2:mem:my-own-db;DB_CLOSE_DELAY=1000")
-                .setAsyncExecutorEnabled(true)
-                .setAsyncExecutorActivate(false)
-                .buildProcessEngine();
-
-        logger.debug("Activiti init complete.");
-
-    }
+//    private void initActiviti(){
+//        logger.info("Initializing Activiti...");
+//
+//        processEngine = ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration()
+//                .setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_CREATE_DROP)
+//                .setJdbcUrl("jdbc:h2:mem:my-own-db;DB_CLOSE_DELAY=1000")
+//                .setAsyncExecutorEnabled(true)
+//                .setAsyncExecutorActivate(false)
+//                .buildProcessEngine();
+//
+//        logger.debug("Activiti init complete.");
+//
+//    }
 
     /**
      * {@link ServletContainerInitializer} to initialize {@link ServletContextInitializer
