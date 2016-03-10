@@ -1,15 +1,18 @@
 package com.studerw;
 
+import com.studerw.activiti.WebConfigurer;
 import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.handlers.PathHandler;
 import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
+import io.undertow.servlet.api.ListenerInfo;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.slf4j.Logger;
 
+import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletException;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -29,7 +32,7 @@ public class App {
     }
 
     public void initialize() throws Exception{
-        initActiviti();
+//        initActiviti();
         initUndertow();
     }
 
@@ -40,10 +43,8 @@ public class App {
                 .setClassLoader(App.class.getClassLoader())
                 .setContextPath("/myapp")
                 .setDeploymentName("test.war")
+                .addListener(new ListenerInfo(WebConfigurer.class))
                 .addServlets(
-                        Servlets.servlet("MessageServlet", MessageServlet.class)
-                                .addInitParam("message", "Hello World")
-                                .addMapping("/*"),
                         Servlets.servlet("MyServlet", MessageServlet.class)
                                 .addInitParam("message", "MyServlet")
                                 .addMapping("/myservlet"));
@@ -53,8 +54,7 @@ public class App {
         PathHandler path = Handlers.path(Handlers.redirect("/myapp"))
                 .addPrefixPath("/myapp", manager.start());
 
-        Undertow server = Undertow.builder()
-                .addHttpListener(8080, "localhost")
+        Undertow server = Undertow.builder().addHttpListener(8080, "localhost")
                 .setHandler(path)
                 .build();
         server.start();
@@ -74,4 +74,28 @@ public class App {
         logger.debug("Activiti init complete.");
 
     }
+
+    /**
+     * {@link ServletContainerInitializer} to initialize {@link ServletContextInitializer
+     * ServletContextInitializers}.
+     */
+    /*
+    private static class Initializer implements ServletContainerInitializer {
+
+        private final ServletContextInitializer[] initializers;
+
+        public Initializer(ServletContextInitializer[] initializers) {
+            this.initializers = initializers;
+        }
+
+        @Override
+        public void onStartup(Set<Class<?>> classes, ServletContext servletContext)
+                throws ServletException {
+            for (ServletContextInitializer initializer : this.initializers) {
+                initializer.onStartup(servletContext);
+            }
+        }
+
+    }
+    */
 }

@@ -23,7 +23,7 @@
     </appender>
 
 
-    <logger name="io.undertow" level="trace" additivity="true" />
+    <logger name="io.undertow" level="debug" additivity="true" />
     <logger name="org.activiti" level="info" additivity="true"/>
 
     <logger name="com.studerw" level="debug" additivity="true"/>
