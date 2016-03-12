@@ -1,14 +1,6 @@
 package com.studerw.activiti;
 
-import java.util.EnumSet;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRegistration;
-
+import com.studerw.LocalHostFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
@@ -16,6 +8,9 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
+
+import javax.servlet.*;
+import java.util.EnumSet;
 
 /**
  * Configuration of web application with Servlet 3.0 APIs.
@@ -52,6 +47,7 @@ public class WebConfigurer implements ServletContextListener {
         EnumSet<DispatcherType> disps = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC);
 
         initSpring(servletContext, rootContext);
+        initLocalhostFilter(servletContext, disps);
 //    initSpringSecurity(servletContext, disps);
 
         log.debug("Servlet Web application fully configured");
@@ -73,6 +69,14 @@ public class WebConfigurer implements ServletContextListener {
         dispatcherServlet.setAsyncSupported(true);
 
         return dispatcherServlet;
+    }
+
+
+    private void initLocalhostFilter(ServletContext servletContext, EnumSet<DispatcherType> disps) {
+        log.debug("Registering Spring Security Filter");
+        FilterRegistration.Dynamic localHostFilter = servletContext.addFilter("localHostFilter", new LocalHostFilter());
+        localHostFilter.addMappingForUrlPatterns(disps, false, "/*");
+        localHostFilter.setAsyncSupported(true);
     }
 
     /**
