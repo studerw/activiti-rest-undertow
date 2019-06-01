@@ -1,6 +1,8 @@
 # activiti-rest-undertow
 
-Activiti Rest with Undertow.
+Activiti Workflow Rest with Undertow
+
+![long-polling-redis](https://github.com/studerw/activiti-rest-undertow/blob/master/undertow_activiti.png)
 
 This is a simple example of adding the Activiti Rest functionality to your own application using
 the Undertow Servlet container as the backend.
@@ -20,7 +22,7 @@ At this point, you will have access to the full [Activiti Rest API](http://www.a
 
 To test the rest API, use Curl or a browser with a JSON formatting plugin (e.g. Chrome JSONView):
 
-`curl http://localhost:8080/myapp/service/repository/process-definitions`
+`curl [http://localhost:8080/myapp/service/repository/process-definitions](http://localhost:8080/myapp/service/repository/process-definitions)
 
 The result should be the single deployed definition:
 ```javascript
