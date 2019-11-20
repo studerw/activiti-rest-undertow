@@ -15,7 +15,7 @@
         <version.java>1.8</version.java>
         <version.activiti>5.22.0</version.activiti>
         <version.jackson>2.9.9</version.jackson>
-        <version.undertow>1.4.24.Final</version.undertow>
+        <version.undertow>2.0.28.Final</version.undertow>
         <version.spring>4.3.24.RELEASE</version.spring>
     </properties>
 
